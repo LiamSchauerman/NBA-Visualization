@@ -1,4 +1,4 @@
-var shots = [{period:1,time:1462.42430555556,assist:'Kemba Walker',player:'Gerald Henderson',result:'made',distance:25,x:11,y:67},
+var shotsFullGame = [{period:1,time:1462.42430555556,assist:'Kemba Walker',player:'Gerald Henderson',result:'made',distance:25,x:11,y:67},
 {period:1,time:1462.34097222222,assist:'Joe Johnson',player:'Deron Williams',result:'made',distance:26,x:31,y:31},
 {period:1,time:1462.31875,assist:'Mason Plumlee',player:'Deron Williams',result:'made',distance:26,x:8,y:26},
 {period:1,time:1462.16527777778,assist:'Andray Blatche',player:'Deron Williams',result:'made',distance:23,x:2,y:7},

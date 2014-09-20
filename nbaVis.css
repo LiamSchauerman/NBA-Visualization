@@ -1,8 +1,9 @@
-#halfCourt {
+body {
 	width:1455px;
 	height:1365px;
+	background: url('img/nba_court_dimensions.jpg') no-repeat;
 }
 
 .image {
-	background: url('img/nba_court_dimensions.jpg')
+/*	background: url('img/nba_court_dimensions.jpg') */
 }
