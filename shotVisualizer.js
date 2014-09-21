@@ -18,7 +18,7 @@ var removeShots = function(){
   console.log('Shots Removed');
 }
 
-//generage circle elements inside container
+//generate circle elements inside container
 var generate = function(){
   for( var i = 0; i<150; i++) {
     container.append('circle');
