@@ -93,11 +93,32 @@ var findShotsByTeam = function(teamName, data) { //creates an array of one team'
 }
 
 //filtering by period
-var filterShotsByPeriod = function(period) {
-  
-}
-$('button .period').on('click', function(){
-  
+var filterShotsByPeriod = function(period, data) {
+  var results = [];
+  for (var i=0; i<data.length; i++) {
+    if(data[i].period === period ) {
+      results.push(data[i]);
+    }
+  }  
+  return results;
+};
+
+$('button.period').on('click', function(){
+  var value = $(this).html();
+  var period;
+  if(value === "Q1") {
+    period = 1
+  } else if (value === "Q2") {
+    period = 2
+  } else if (value === "Q3") {
+    period = 3
+  } else if (value === "Q4") {
+    period = 4
+  } else if (value === "Overtime") {
+    period = 5
+  }
+  console.log(period)
+  update(filterShotsByPeriod(period, allShots))
 });
 
 $('button.bobcats').on('click', function(){
