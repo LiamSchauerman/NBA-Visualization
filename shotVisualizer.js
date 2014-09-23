@@ -3,7 +3,7 @@ $(document).ready(function(){
 var courtWidth = 873;
 var courtHeight = 819;
 
-var container = d3.select(".court") // container is our outer svg element
+d3.select(".court") // container is our outer svg element
   .append("svg")
     .attr('width', courtWidth)
     .attr('height', courtHeight);
@@ -12,20 +12,42 @@ var container = d3.select(".court") // container is our outer svg element
   // first JOINs data to 
 var update = function(data) {
   // passes data into svg element
-  var circles = d3.select('.court svg').selectAll('circle')
+  var circles;
+  circles = d3.select('.court svg').selectAll('circle')
       .data(data)
 
-      //JOIN
-      circles.attr({
-        class: 'shot',
-        cy: 0,
-        r: 0})
-      .transition()
-        .duration(2000)
+      // EXIT
+      circles.exit()
         .attr({
-          r: 6,
+          r:7,
+          color:'orange',
+          opacity: 1
+        })
+        .transition()
+          .duration(1000)
+          .attr({
+            r: 1,
+            opacity: 0
+          })
+      .remove()
+
+      // UPDATE
+      circles
+        .attr({
+          opacity: 1,
+        })
+      .transition()
+        .duration(125)
+        .attr({
+          opacity: 0,
           cx: function(d) {return d.x * 17.4;},
           cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
+          })
+      .transition()
+        .duration(125)
+        .attr({
+          opacity: 1,
+          r: 6,
           fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
           team: function(d) { return d.team },
           player: function(d) { return d.player },
@@ -43,15 +65,14 @@ var update = function(data) {
     // ENTER for creating elements
     circles.enter().append('circle')
       .attr({
-        cy: 1200,
+        cx: function(d) {return d.x * 17.4;},
+        cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
         class: 'shot',
         r: 0})
     .transition()
-      .duration(2000)
+      .duration(250)
       .attr({
         r: 6,
-        cx: function(d) {return d.x * 17.4;},
-        cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
         fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
         team: function(d) { return d.team },
         player: function(d) { return d.player },
@@ -64,17 +85,6 @@ var update = function(data) {
         distance: function(d) { return d.distance },
         result:  function(d) { return d.result }
       });
-
-      circles.exit()
-        .transition()
-          .duration(1000)
-          .attr({
-            r: 20,
-            opacity: 0
-          })
-      .remove()
-  // EXIT
-  //
 
 }; //end update
 
