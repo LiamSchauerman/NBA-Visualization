@@ -19,14 +19,13 @@ var update = function(data) {
       // EXIT
       circles.exit()
         .attr({
-          r:7,
-          color:'orange',
+          r:5,
           opacity: 1
         })
         .transition()
-          .duration(1000)
+          .duration(125)
           .attr({
-            r: 1,
+            r: 6,
             opacity: 0
           })
       .remove()
@@ -34,21 +33,26 @@ var update = function(data) {
       // UPDATE
       circles
         .attr({
+          cx: function(d) {return d.x * 17.4;},
+          cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
           opacity: 1,
+          r: 6,
+          fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
         })
       .transition()
         .duration(125)
         .attr({
-          opacity: 0,
-          cx: function(d) {return d.x * 17.4;},
-          cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
-          })
-      .transition()
-        .duration(125)
-        .attr({
+          cx: function(d) {
+            var dx = d3.random.normal(0, 3);
+            return (d.x * 17.4) + dx();
+          },
+          cy: function(d) {
+            var dy = d3.random.normal(0, 3);          
+            if(d.y > 47) {d.y = 94 - d.y;} 
+            return courtHeight - (d.y * 17.4) + dy();
+          },
           opacity: 1,
-          r: 6,
-          fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
+          r: 5,
           team: function(d) { return d.team },
           player: function(d) { return d.player },
           period: function(d) { if(d.period <5){return "Q"+d.period} else {return "OT"}  },
@@ -65,15 +69,23 @@ var update = function(data) {
     // ENTER for creating elements
     circles.enter().append('circle')
       .attr({
-        cx: function(d) {return d.x * 17.4;},
-        cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
+        cx: function(d) {
+          var dx = d3.random.normal(0, 3);
+          return (d.x * 17.4) + dx();
+        },
+        cy: function(d) {
+          var dy = d3.random.normal(0, 3);          
+          if(d.y > 47) {d.y = 94 - d.y;} 
+          return courtHeight - (d.y * 17.4) + dy();
+        },
         class: 'shot',
-        r: 0})
-    .transition()
-      .duration(250)
-      .attr({
         r: 6,
         fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
+      })
+    .transition()
+      .duration(125)
+      .attr({
+        r: 5,
         team: function(d) { return d.team },
         player: function(d) { return d.player },
         period: function(d) { if(d.period <5){return "Q"+d.period} else {return "OT"}  },
@@ -92,8 +104,11 @@ var update = function(data) {
 update(allShots);
 
 
-var findShotsByTeam = function(teamName, data) { //creates an array of one team's shots
-  var teamShots = [];
+// FUNCTIONS TO FILTER DATA
+
+// filters by team
+var findShotsByTeam = function(teamName, data) { 
+ var teamShots = [];
   for (var i=0; i<data.length; i++) {
     if(data[i].team === teamName ) {
       teamShots.push(data[i]);
@@ -102,7 +117,7 @@ var findShotsByTeam = function(teamName, data) { //creates an array of one team'
   return teamShots;
 }
 
-//filtering by period
+// filters by period
 var filterShotsByPeriod = function(period, data) {
   var results = [];
   for (var i=0; i<data.length; i++) {
@@ -113,24 +128,18 @@ var filterShotsByPeriod = function(period, data) {
   return results;
 };
 
+// filter by player
+
+
+// CLICK EVENTS
+
+// period buttons
 $('button.period').on('click', function(){
-  var value = $(this).html();
-  var period;
-  if(value === "Q1") {
-    period = 1
-  } else if (value === "Q2") {
-    period = 2
-  } else if (value === "Q3") {
-    period = 3
-  } else if (value === "Q4") {
-    period = 4
-  } else if (value === "Overtime") {
-    period = 5
-  }
-  console.log(period)
+  var period = $(this).data('period');
   update(filterShotsByPeriod(period, allShots))
 });
 
+// team buttons
 $('button.bobcats').on('click', function(){
 // loading shots for the Bobcats only
   update(findShotsByTeam('Charlotte Bobcats', allShots));
@@ -146,6 +155,7 @@ $('button.viewAll').on('click', function(){
   update(allShots);
 });
 
+// tooltip mouse events
 $('.court').on('mouseover', 'circle', function(){
   var player = $(this).attr('player');
   var assist = $(this).attr('assist');
@@ -168,9 +178,9 @@ $('.court').on('mouseover', 'circle', function(){
     .css('left', ($(this).attr('cx') - (w*.5)).toString()+'px');
 });
 
-$('.court').on('mouseleave', 'circle', function(){ //mousing off circles inside .something
+$('.court').on('mouseleave', 'circle', function(){ 
   $(this).attr('stroke-width', '0');
   $('.tooltip').css({"opacity":0, 'top':0});
 });
 
-});
+}); // end ready block
