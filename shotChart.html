@@ -4,13 +4,28 @@
     <link rel='stylesheet' type='css' href='nbaVis.css'>
   </head>
   <body>
-    <button class='bobcats'></button>
-    <button class='nets'></button>
-    <div class = "something"></div>
-    <div class = 'tooltip'></div>
-    <script src='shots.js'></script>
-    <script src="d3.js" charset="utf-8"></script>
-    <script src='lib/jquery.js'></script>
-    <script src='shotVisualizer.js'></script>
+    <div id='filters'>
+      <!-- choosing teams -->
+      <button class='bobcats'></button>
+      <button class='nets'></button>
+      <button class='viewAll'>View All</button>
+<!--       <br style='clear:both'/>
+      <br style='clear:both'/> -->
+      <!-- choosing period -->
+      <button class='period' value='Full game'>Full game
+      <button class="period" value='1'>Q1
+      <button class="period" value='2'>Q2
+      <button class="period" value='3'>Q3
+      <button class="period" value='4'>Q4
+      <button class="period" value='Overtime'> Overtime
+    </div>
+    <div id='main'>
+      <div class = "court"></div>
+      <div class = 'tooltip'></div>
+    </div>
+      <script src='shots.js'></script>
+      <script src="d3.js" charset="utf-8"></script>
+      <script src='lib/jquery.js'></script>
+      <script src='shotVisualizer.js'></script>
   </body>
 </html>

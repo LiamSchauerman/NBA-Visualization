@@ -1,4 +1,4 @@
-var shotsFullGame = [
+var allShots = [
 {period:5,minute:4,second:07,team:'Charlotte Bobcats',assist:'Josh Mcroberts',player:'Al Jefferson',result:'made',distance:0,x:25,y:88},
 {period:2,minute:2,second:36,team:'Charlotte Bobcats',assist:'Gerald Henderson',player:'Al Jefferson',result:'made',distance:10,x:35,y:85},
 {period:4,minute:1,second:53,team:'Charlotte Bobcats',assist:'',player:'Al Jefferson',result:'missed',distance:10,x:18,y:81},

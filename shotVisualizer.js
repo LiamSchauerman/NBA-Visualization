@@ -3,77 +3,53 @@ $(document).ready(function(){
 var courtWidth = 873;
 var courtHeight = 819;
 
-var container = d3.select(".something")
+var container = d3.select(".court") // container is our outer svg element
   .append("svg")
     .attr('width', courtWidth)
     .attr('height', courtHeight);
 
-var removeShots = function(){
-  console.log('Removing Shots');
-    d3.selectAll('circle')
-    .transition()
-      .duration(100)
-      .style('opacity', '0')
-    .remove();
-  console.log('Shots Removed');
-}
-
-//generate circle elements inside container
-var generate = function(){
-  for( var i = 0; i<150; i++) {
-    container.append('circle');
-  }
-}
-
-var newUpdate = function(data) {
-d3.selectAll('circle')
-  .data(data)
-  .attr({
-        r: 5,
-        cx: function(d) {return d.x * 17.4;},
-        cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
-        fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
-        team: function(d) { return d.team },
-        player: function(d) { return d.player },
-        period: function(d) { if(d.period <5){return "Q"+d.period} else {return "OT"}  },
-        minuteNum: function(d) { return d.minute },
-        secondNum: function(d) { return d.second },
-        minute: function(d) {return d.minute.toString();},
-        second: function(d) {return d.second < 10 ? d.second.toString() : d.second;},
-        assist: function(d) { return d.assist },
-        distance: function(d) { return d.distance },
-        result:  function(d) { return d.result }
-      })
-  .exit().remove();
-}
-
-
-//update the circle elements with data
-
-
-/*
+// general update function
+  // first JOINs data to 
 var update = function(data) {
-  console.log('Updating Court');
+  // passes data into svg element
+  var circles = d3.select('.court svg').selectAll('circle')
+      .data(data)
 
-  var randomX = Math.random()*47*17.4;
-  var randomY = Math.random()*50*17.4;
+      //JOIN
+      circles.attr({
+        class: 'shot',
+        cy: 0,
+        r: 0})
+      .transition()
+        .duration(2000)
+        .attr({
+          r: 6,
+          cx: function(d) {return d.x * 17.4;},
+          cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
+          fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
+          team: function(d) { return d.team },
+          player: function(d) { return d.player },
+          period: function(d) { if(d.period <5){return "Q"+d.period} else {return "OT"}  },
+          minuteNum: function(d) { return d.minute },
+          secondNum: function(d) { return d.second },
+          minute: function(d) {return d.minute.toString();},
+          second: function(d) {return d.second < 10 ? d.second.toString() : d.second;},
+          assist: function(d) { return d.assist },
+          distance: function(d) { return d.distance },
+          result:  function(d) { return d.result }
+      });
 
 
-
-  // DATA JOIN
-  // Join new data with old elements, if any.
-  var shots = d3.select('svg').selectAll('circle').data(data);
-
-  // ENTER
-  // Creating new elements as needed
-  shots.enter().append('circle')
-      .attr('class', 'shot')
-      .attr('cx',randomX)
-      .attr('cy',randomY)
-    .transition()
-      .duration(1000)
+    // ENTER for creating elements
+    circles.enter().append('circle')
       .attr({
-        r: 5,
+        cy: 1200,
+        class: 'shot',
+        r: 0})
+    .transition()
+      .duration(2000)
+      .attr({
+        r: 6,
         cx: function(d) {return d.x * 17.4;},
         cy: function(d) {if(d.y > 47) {d.y = 94 - d.y;} return courtHeight - (d.y * 17.4);},
         fill: function(d) { return d.result === 'made' ? 'green' : 'red'; },
@@ -88,43 +64,58 @@ var update = function(data) {
         distance: function(d) { return d.distance },
         result:  function(d) { return d.result }
       });
-} //end update
 
-*/
-generate();
-newUpdate(shotsFullGame);
+      circles.exit()
+        .transition()
+          .duration(1000)
+          .attr({
+            r: 20,
+            opacity: 0
+          })
+      .remove()
+  // EXIT
+  //
+
+}; //end update
 
 
-var findShotsByTeam = function(teamName) {
+update(allShots);
+
+
+var findShotsByTeam = function(teamName, data) { //creates an array of one team's shots
   var teamShots = [];
-  for (var i=0; i<shotsFullGame.length; i++) {
-    if(shotsFullGame[i].team === teamName ) {
-      // console.log(shotsFullGame[i])
-      teamShots.push(shotsFullGame[i]);
+  for (var i=0; i<data.length; i++) {
+    if(data[i].team === teamName ) {
+      teamShots.push(data[i]);
     }
   }
-  console.log(teamName);
-  console.log(teamShots);
   return teamShots;
 }
 
+//filtering by period
+var filterShotsByPeriod = function(period) {
+  
+}
+$('button .period').on('click', function(){
+  
+});
 
 $('button.bobcats').on('click', function(){
 // loading shots for the Bobcats only
-  removeShots();
-  generate();
-  newUpdate(findShotsByTeam('Charlotte Bobcats'));
+  update(findShotsByTeam('Charlotte Bobcats', allShots));
 });
 
 $('button.nets').on('click', function(){
 // loading shots for the Nets only
-  removeShots();
-  generate();
-  newUpdate(findShotsByTeam("Brooklyn Nets"));
+  update(findShotsByTeam("Brooklyn Nets", allShots));
 });
 
-$('.something').on('mouseover', 'circle', function(){
-  console.log('mouseover');
+$('button.viewAll').on('click', function(){
+// loading shots for the Nets only
+  update(allShots);
+});
+
+$('.court').on('mouseover', 'circle', function(){
   var player = $(this).attr('player');
   var assist = $(this).attr('assist');
 
@@ -144,14 +135,9 @@ $('.something').on('mouseover', 'circle', function(){
     .css('opacity', 1)
     .css('top', newY)
     .css('left', ($(this).attr('cx') - (w*.5)).toString()+'px');
-  //top will be $(this).cy +100
-  // left will be cx -w/2
-    // .css('top', '50px')
-    // .css('left', '200px')
-
 });
 
-$('.something').on('mouseleave', 'circle', function(){
+$('.court').on('mouseleave', 'circle', function(){ //mousing off circles inside .something
   $(this).attr('stroke-width', '0');
   $('.tooltip').css({"opacity":0, 'top':0});
 });
