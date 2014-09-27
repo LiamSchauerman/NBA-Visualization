@@ -151,7 +151,6 @@ var getShotDistribution = function(teamname, data){
   var totalShots = 0;
   var allPlayers = {}; // this lets us group shots by player. this will be converted to an array below
   for( var i=0; i < team.length; i++ ){
-    console.log('yeee');
     if( !allPlayers[team[i].player] ) { // creating a new property- happens when player is not in object
       allPlayers[team[i].player] = { name: team[i].player };
       if ( team[i].result === 'made' ) {
@@ -176,59 +175,82 @@ var getShotDistribution = function(teamname, data){
   return players
 }
 
+var netsSort = getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade})// 9
+console.log(netsSort)
+console.log(getShotDistribution('Charlotte Bobcats', allShots)) // 10
+
 // BAR GRAPH SECTION
 
 var barGraphUpdate = function(data){
-// JOIN
   var bars;
-  bars = d3.select("#chart").selectAll("div")
+
+  // JOIN
+  bars = d3.select("#chart").selectAll(".bar")
         .data(data)
 
-// EXIT
+  // exit
+  console.log(bars.exit())
   bars.exit()
     .style('opacity', 1)
     .transition()
       .duration(750)
-    .style('opacity', 0)
+      .style('opacity', 0)
     .remove()
 
   // UPDATE
   bars
     .style({
       width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
-      backgroundcolor: 'green'
     })
-    .select('div') // shots made
+    .select('.madeShots') // shots made
       .attr('class', 'madeShots')
       .style({
         width: function(d) { return d.shotsMade*40 + 'px' }
       })
-    .select('div') // text about player and shots
+    .select('.text') // text about player and shots
       .attr('class','text')
       .text(function(d) {
         return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
       })
 
 //ENTER
-  bars.enter().append("div") // total shots
-    .style({
-      width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
-    })
-    .attr("class", 'bar')
-    .append('div') // shots made
+  var containerBars = bars.enter()
+    .append("div") // total shots
+      .style('width', '0px')
+      .attr("class", 'bar')
+
+  var shotsMadeBars = containerBars.append('div')
+      .style('width', '0px')
       .attr('class', 'madeShots')
+
+
+  var textBars = shotsMadeBars.append('div')
+      .style('opacity', 0)
+      .attr('class','text')
+        .text(function(d) {
+          return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
+        })
+
+    containerBars.transition()
+      .duration(750)
+      .style({
+        width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
+      })
+
+    shotsMadeBars.transition()
+      .duration(500)
       .style({
         width: function(d) { return d.shotsMade*40 + 'px' }
       })
-    .append('div') // shots missed
-      .attr('class','text')
-      .text(function(d) {
-        return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
-      })
 
+    textBars.transition()
+      .duration(500)
+      .style('opacity', 1)
+
+        
 
 }; // end barGraphUpdate();
-barGraphUpdate(getShotDistribution('Brooklyn Nets', allShots));
+barGraphUpdate( getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade}) );
 
 
 
@@ -246,14 +268,14 @@ $('button.bobcats').on('click', function(){
 // loading shots for the Bobcats only
   $('#chart h1 span').html('Bobcats');
   update(filterShotsByTeam('Charlotte Bobcats', allShots));
-  barGraphUpdate(getShotDistribution('Charlotte Bobcats', allShots));
+  barGraphUpdate(getShotDistribution('Charlotte Bobcats', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade}));
 });
 
 $('button.nets').on('click', function(){
 // loading shots for the Nets only
   $('#chart h1 span').html('Nets');
   update(filterShotsByTeam("Brooklyn Nets", allShots));
-  barGraphUpdate(getShotDistribution('Brooklyn Nets', allShots));
+  barGraphUpdate(getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade}));
 
 });
 

@@ -79,6 +79,7 @@ button {
     height:30px;
     position: relative;
     top:0px;
+    float:left;
 }
 
 .text {
@@ -87,6 +88,7 @@ button {
   top:0px;
   width:200px;
   margin-left:10px;
+  float:left;
 }
 
 /*#chart div {
