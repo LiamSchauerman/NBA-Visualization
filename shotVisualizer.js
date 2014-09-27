@@ -13,6 +13,8 @@ d3.select(".court") // container is our outer svg element
 var update = function(data) {
   // passes data into svg element
   var circles;
+
+  // JOIN
   circles = d3.select('.court svg').selectAll('circle')
       .data(data)
 
@@ -106,7 +108,7 @@ update(allShots);
 
 // FUNCTIONS TO FILTER DATA
 
-// filters by team
+// returns all shots by team
 var filterShotsByTeam = function(teamName, data) { 
  var teamShots = [];
   for (var i=0; i<data.length; i++) {
@@ -117,7 +119,7 @@ var filterShotsByTeam = function(teamName, data) {
   return teamShots;
 }
 
-// filters by period
+// returns all shots in period
 var filterShotsByPeriod = function(period, data) {
   var results = [];
   for (var i=0; i<data.length; i++) {
@@ -128,9 +130,7 @@ var filterShotsByPeriod = function(period, data) {
   return results;
 };
 
-// filter shot count by player
-
-// create an object
+// returns all shots by a single player
 var filterShotsByPlayer = function(player, data){
   var results = [];
   for (var i=0; i<data.length; i++) {
@@ -141,12 +141,7 @@ var filterShotsByPlayer = function(player, data){
   return results;
 }
 
-// store total team shots
-//iterate through each player
-//store his shots made and shots missed in an object - TO BE PASSED AS DATA
-//create bar graph, one row for each player
-  // setting the width to the proportional size of their shots
-
+// returns an array containing one object per player
 var getShotDistribution = function(teamname, data){
   // get an array of objects, one object per player
   // {player1}
@@ -188,23 +183,44 @@ var barGraphUpdate = function(data){
   var bars;
   bars = d3.select("#chart").selectAll("div")
         .data(data)
-        console.log(data)
 
-//ENTER
-  bars.enter().append("div")
+// EXIT
+  bars.exit()
+    .style('opacity', 1)
+    .transition()
+      .duration(750)
+    .style('opacity', 0)
+    .remove()
+
+  // UPDATE
+  bars
     .style({
-      // x: margin.left + 'px',
       width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
-      // height: '30px',
-      // backgroundcolor: 'steelblue'
+      backgroundcolor: 'green'
     })
-    .attr("class", 'bar')
-    .append('div')
+    .select('div') // shots made
       .attr('class', 'madeShots')
       .style({
         width: function(d) { return d.shotsMade*40 + 'px' }
       })
-    .append('div')
+    .select('div') // text about player and shots
+      .attr('class','text')
+      .text(function(d) {
+        return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
+      })
+
+//ENTER
+  bars.enter().append("div") // total shots
+    .style({
+      width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
+    })
+    .attr("class", 'bar')
+    .append('div') // shots made
+      .attr('class', 'madeShots')
+      .style({
+        width: function(d) { return d.shotsMade*40 + 'px' }
+      })
+    .append('div') // shots missed
       .attr('class','text')
       .text(function(d) {
         return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
@@ -212,11 +228,7 @@ var barGraphUpdate = function(data){
 
 
 }; // end barGraphUpdate();
-
-
-var netsPlayersShots = getShotDistribution('Brooklyn Nets', allShots);
-console.log(netsPlayersShots)
-barGraphUpdate(netsPlayersShots);
+barGraphUpdate(getShotDistribution('Brooklyn Nets', allShots));
 
 
 
@@ -232,20 +244,23 @@ $('button.period').on('click', function(){
 // team buttons
 $('button.bobcats').on('click', function(){
 // loading shots for the Bobcats only
+  $('#chart h1 span').html('Bobcats');
   update(filterShotsByTeam('Charlotte Bobcats', allShots));
+  barGraphUpdate(getShotDistribution('Charlotte Bobcats', allShots));
 });
 
 $('button.nets').on('click', function(){
 // loading shots for the Nets only
+  $('#chart h1 span').html('Nets');
   update(filterShotsByTeam("Brooklyn Nets", allShots));
+  barGraphUpdate(getShotDistribution('Brooklyn Nets', allShots));
+
 });
 
-// $('button.viewAll').on('click', function(){
-// // loading shots for the Nets only
-//   // update(allShots);
-//   var netsShotsByPlayer = getPlayerShotsByTeam('Brooklyn Nets', allShots);
-//   console.log(netsShotsByPlayer);
-// });
+$('button.viewAll').on('click', function(){
+// loading shots for the Nets only
+  update(allShots);
+});
 
 // tooltip mouse events
 $('.court').on('mouseover', 'circle', function(){
