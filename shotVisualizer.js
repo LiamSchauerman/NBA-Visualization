@@ -107,7 +107,7 @@ update(allShots);
 // FUNCTIONS TO FILTER DATA
 
 // filters by team
-var findShotsByTeam = function(teamName, data) { 
+var filterShotsByTeam = function(teamName, data) { 
  var teamShots = [];
   for (var i=0; i<data.length; i++) {
     if(data[i].team === teamName ) {
@@ -128,7 +128,97 @@ var filterShotsByPeriod = function(period, data) {
   return results;
 };
 
-// filter by player
+// filter shot count by player
+
+// create an object
+var filterShotsByPlayer = function(player, data){
+  var results = [];
+  for (var i=0; i<data.length; i++) {
+    if(data[i].player === player ) {
+      results.push( data[i] );
+    }
+  }  
+  return results;
+}
+
+// store total team shots
+//iterate through each player
+//store his shots made and shots missed in an object - TO BE PASSED AS DATA
+//create bar graph, one row for each player
+  // setting the width to the proportional size of their shots
+
+var getShotDistribution = function(teamname, data){
+  // get an array of objects, one object per player
+  // {player1}
+  // [{}, {}, {}, ]
+  var team = filterShotsByTeam(teamname, data); 
+  // create an object, adding player's names as keys
+  var totalShots = 0;
+  var allPlayers = {}; // this lets us group shots by player. this will be converted to an array below
+  for( var i=0; i < team.length; i++ ){
+    console.log('yeee');
+    if( !allPlayers[team[i].player] ) { // creating a new property- happens when player is not in object
+      allPlayers[team[i].player] = { name: team[i].player };
+      if ( team[i].result === 'made' ) {
+        allPlayers[team[i].player].shotsMade = 1;
+        allPlayers[team[i].player].shotsMissed = 0;
+      } else {
+        allPlayers[team[i].player].shotsMade = 0;
+        allPlayers[team[i].player].shotsMissed = 1;
+      }
+    } else { // player is already in object
+      if ( team[i].result === 'made' ) {
+        allPlayers[team[i].player].shotsMade++;
+      } else {
+        allPlayers[team[i].player].shotsMissed++;
+      }
+    }
+  }
+  var players = []; // converting object to array
+  for (var key in allPlayers ) {
+    players.push(allPlayers[key]);
+  }
+  return players
+}
+
+// BAR GRAPH SECTION
+
+var barGraphUpdate = function(data){
+// JOIN
+  var bars;
+  bars = d3.select("#chart").selectAll("div")
+        .data(data)
+        console.log(data)
+
+//ENTER
+  bars.enter().append("div")
+    .style({
+      // x: margin.left + 'px',
+      width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
+      // height: '30px',
+      // backgroundcolor: 'steelblue'
+    })
+    .attr("class", 'bar')
+    .append('div')
+      .attr('class', 'madeShots')
+      .style({
+        width: function(d) { return d.shotsMade*40 + 'px' }
+      })
+    .append('div')
+      .attr('class','text')
+      .text(function(d) {
+        return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
+      })
+
+
+}; // end barGraphUpdate();
+
+
+var netsPlayersShots = getShotDistribution('Brooklyn Nets', allShots);
+console.log(netsPlayersShots)
+barGraphUpdate(netsPlayersShots);
+
+
 
 
 // CLICK EVENTS
@@ -142,18 +232,20 @@ $('button.period').on('click', function(){
 // team buttons
 $('button.bobcats').on('click', function(){
 // loading shots for the Bobcats only
-  update(findShotsByTeam('Charlotte Bobcats', allShots));
+  update(filterShotsByTeam('Charlotte Bobcats', allShots));
 });
 
 $('button.nets').on('click', function(){
 // loading shots for the Nets only
-  update(findShotsByTeam("Brooklyn Nets", allShots));
+  update(filterShotsByTeam("Brooklyn Nets", allShots));
 });
 
-$('button.viewAll').on('click', function(){
-// loading shots for the Nets only
-  update(allShots);
-});
+// $('button.viewAll').on('click', function(){
+// // loading shots for the Nets only
+//   // update(allShots);
+//   var netsShotsByPlayer = getPlayerShotsByTeam('Brooklyn Nets', allShots);
+//   console.log(netsShotsByPlayer);
+// });
 
 // tooltip mouse events
 $('.court').on('mouseover', 'circle', function(){

@@ -56,3 +56,66 @@ button {
 .exit {
   left:1000px;
 }
+
+/*BAR GRAPHS */
+
+#chart {
+  background-color: orange;
+  padding:5px;
+}
+
+.bar {
+  background-color: black;
+  height: 30px;
+  border:1px solid black;
+  text-align:left;
+  margin-right:5px;
+  margin-top: 6px;
+  margin-bottom:0px;
+}
+
+.madeShots {
+    background-color: steelblue;
+    height:30px;
+    position: relative;
+    top:0px;
+}
+
+.text {
+  color:white;
+  position:relative;
+  top:0px;
+  width:200px;
+  margin-left:10px;
+}
+
+/*#chart div {
+  color:orange;
+  border: 1px solid green;
+}*/
+
+/*.bar:hover rect {
+  fill: 'black';
+}
+
+.value {
+  fill: white;
+}
+
+.axis {
+  shape-rendering: 'crispEdges';
+}
+
+.axis path {
+  stroke: none;
+}
+
+.x.axis line {
+  stroke: #fff;
+  stroke-opacity: .8;
+}
+
+.y.axis path {
+  stroke: black;
+}*/
+

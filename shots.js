@@ -165,7 +165,7 @@ var allShots = [
 {period:4,minute:5,second:35,team:'Brooklyn Nets',assist:'',player:'Deron Williams',result:'missed',distance:6,x:26,y:12},
 {period:1,minute:2,second:28,team:'Brooklyn Nets',assist:'',player:'Joe Johnson',result:'missed',distance:6,x:25,y:12},
 {period:3,minute:9,second:30,team:'Brooklyn Nets',assist:'',player:'Joe Johnson',result:'missed',distance:6,x:28,y:11},
-{period:4,minute:8,second:52,team:'Brooklyn Nets',assist:'deron williams',player:'andray blatche',result:'made',distance:7,x:25,y:13},
+{period:4,minute:8,second:52,team:'Brooklyn Nets',assist:'deron williams',player:'Andray Blatche',result:'made',distance:7,x:25,y:13},
 {period:1,minute:5,second:33,team:'Brooklyn Nets',assist:'',player:'Deron Williams',result:'made',distance:7,x:23,y:13},
 {period:2,minute:3,second:15,team:'Charlotte Bobcats',assist:'Kemba Walker',player:'Al Jefferson',result:'made',distance:8,x:24,y:80},
 {period:4,minute:2,second:12,team:'Brooklyn Nets',assist:'',player:'Joe Johnson',result:'missed',distance:8,x:19,y:12},

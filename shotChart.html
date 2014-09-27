@@ -11,21 +11,24 @@
     <div id='filters'>
       <!-- choosing teams -->
       <h1>Select a Team<h1>
-      <button class='bobcats'></button>
-      <button class='nets'></button>
-      <button class='viewAll'>View All</button>
-      <br style='clear:both'/>
-      <!-- choosing period -->
+        <button class='bobcats'></button>
+        <button class='nets'></button>
+        <button class='viewAll'>View All</button>
+        <br style='clear:both'/>
+        <!-- choosing period -->
       <h1>Select a Period</h1>
-      <button class="period" data-period='1' >Q1</button>
-      <button class="period" data-period='2' >Q2</button>
-      <button class="period" data-period='3' >Q3</button>
-      <button class="period" data-period='4' >Q4</button>
-      <button class="period" data-period='5' >Overtime</button>
+        <button class="period" data-period='1' >Q1</button>
+        <button class="period" data-period='2' >Q2</button>
+        <button class="period" data-period='3' >Q3</button>
+        <button class="period" data-period='4' >Q4</button>
+        <button class="period" data-period='5' >Overtime</button>
     </div>
-      <script src='shots.js'></script>
-      <script src="d3.js" charset="utf-8"></script>
-      <script src='lib/jquery.js'></script>
-      <script src='shotVisualizer.js'></script>
+    <hr style='clear:both' />
+    <div id='chart'><h1>Nets Shot Distribution</h1></div>
+    <script src='shots.js'></script>
+    <script src='lib/jquery.js'></script>
+    <script src='shotVisualizer.js'></script>
+    <script src='barGraphs.js'></script>
+    <script src="d3.js" charset="utf-8"></script>
   </body>
 </html>
