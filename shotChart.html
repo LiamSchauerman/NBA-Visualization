@@ -22,13 +22,18 @@
           <button class="period" data-period='4' >Q4</button>
           <button class="period" data-period='5' >Overtime</button>
       </div>
-    </div>
+    </div> <!-- end filters -->
     <hr style='clear:both' />
-    <div id='main'>
-      <div class = "court"></div>
-      <div class = 'tooltip'></div>
+    <div class='left'>
+      <div id='main'>
+        <div class = "court"></div>
+        <div class = 'tooltip'></div>
+      </div>
+    </div>  
+    <div class='left'>
+      <div id='chart'><h1><span>Nets</span> Shot Distribution</h1>
+      </div>
     </div>
-    <div id='chart'><h1><span>Nets</span> Shot Distribution</h1></div>
     <script src='shots.js'></script>
     <script src='lib/jquery.js'></script>
     <script src='shotVisualizer.js'></script>
