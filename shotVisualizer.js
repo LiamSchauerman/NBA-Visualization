@@ -99,7 +99,6 @@ var update = function(data) {
         distance: function(d) { return d.distance },
         result:  function(d) { return d.result }
       });
-
 }; //end update
 
 
@@ -175,10 +174,6 @@ var getShotDistribution = function(teamname, data){
   return players
 }
 
-var netsSort = getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade})// 9
-console.log(netsSort)
-console.log(getShotDistribution('Charlotte Bobcats', allShots)) // 10
-
 // BAR GRAPH SECTION
 
 var barGraphUpdate = function(data){
@@ -199,6 +194,7 @@ var barGraphUpdate = function(data){
 
   // UPDATE
   bars
+  .transition().duration(500)
     .style({
       width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
     })
@@ -253,8 +249,6 @@ var barGraphUpdate = function(data){
 barGraphUpdate( getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade}) );
 
 
-
-
 // CLICK EVENTS
 
 // period buttons
@@ -284,7 +278,18 @@ $('button.viewAll').on('click', function(){
   update(allShots);
 });
 
-// tooltip mouse events
+$('.bar').on('click', function(){
+  var playerText = $(this).find('.text').text();
+  player = playerText.substring(0, playerText.indexOf(':'));
+  console.log(player);
+  update(filterShotsByPlayer(player, allShots));
+  // access player name
+  // filterShotsByPlayer
+  // update
+})
+
+
+// TOOLTIP MOUSE EVENTS
 $('.court').on('mouseover', 'circle', function(){
   var player = $(this).attr('player');
   var assist = $(this).attr('assist');
