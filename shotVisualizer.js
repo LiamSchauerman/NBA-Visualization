@@ -245,6 +245,7 @@ var barGraphUpdate = function(data){
         
 
 }; // end barGraphUpdate();
+
 barGraphUpdate( getShotDistribution('Brooklyn Nets', allShots).sort(function(a, b){ return b.shotsMade - a.shotsMade}) );
 
 

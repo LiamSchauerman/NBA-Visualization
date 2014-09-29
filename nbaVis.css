@@ -63,6 +63,7 @@ button {
   background-color: orange;
   padding:5px;
   float:left;
+  width:;
 }
 
 .bar {
@@ -90,6 +91,7 @@ button {
   width:200px;
   margin-left:10px;
   float:left;
+  display:block;
 }
 
 /*#chart div {
