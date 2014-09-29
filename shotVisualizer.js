@@ -178,8 +178,15 @@ var getShotDistribution = function(teamname, data){
 
 var barGraphUpdate = function(data){
   var bars;
+  // set ratio instead of always *setWidthpx // total width is 820px
+  // largest row should be 800 px
+  // coefficient = 800/mostMade
+  console.log( data[0].shotsMade)
+  var setWidth = 800 / (data[0].shotsMade + data[0].shotsMissed);
+
 
   // JOIN
+
   bars = d3.select("#chart").selectAll(".bar")
         .data(data)
 
@@ -196,14 +203,10 @@ var barGraphUpdate = function(data){
   bars
   .transition().duration(500)
     .style({
-      width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
-    })
-    .select('.madeShots') // shots made
+      width: function(d) { return (d.shotsMade+d.shotsMissed) * setWidth + "px"; }, }) .select('.madeShots') // shots made
       .attr('class', 'madeShots')
       .style({
-        width: function(d) { return d.shotsMade*40 + 'px' }
-      })
-    .select('.text') // text about player and shots
+        width: function(d) { return d.shotsMade*setWidth + 'px' } }) .select('.text') // text about player and shots
       .attr('class','text')
       .text(function(d) {
         return d.name + ': ' + d.shotsMade+'/'+(d.shotsMissed+d.shotsMade);
@@ -230,15 +233,11 @@ var barGraphUpdate = function(data){
     containerBars.transition()
       .duration(750)
       .style({
-        width: function(d) { return (d.shotsMade+d.shotsMissed) * 40 + "px"; },
-      })
-
+        width: function(d) { return (d.shotsMade+d.shotsMissed) * setWidth + "px"; }, })
     shotsMadeBars.transition()
       .duration(500)
       .style({
-        width: function(d) { return d.shotsMade*40 + 'px' }
-      })
-
+        width: function(d) { return d.shotsMade*setWidth + 'px' } })
     textBars.transition()
       .duration(500)
       .style('opacity', 1)
@@ -255,6 +254,12 @@ barGraphUpdate( getShotDistribution('Brooklyn Nets', allShots).sort(function(a, 
 $('button.period').on('click', function(){
   var period = $(this).data('period');
   update(filterShotsByPeriod(period, allShots))
+});
+
+// remove all buttons
+$('button.test').on('click', function(){
+  var emptySet = []
+  update(emptySet)
 });
 
 // team buttons
@@ -305,9 +310,7 @@ $('.court').on('mouseover', 'circle', function(){
   tool.html(toolhtml);
   var w = parseInt($('.tooltip').css('width'));
   var h = parseInt($('.tooltip').css('height'));
-  var newY = ($(this).attr('cy')-40-h).toString()+'px';
-  $('.tooltip')
-    .css('opacity', 1)
+  var newY = ($(this).attr('cy')-40-h).toString()+'px'; $('.tooltip') .css('opacity', 1)
     .css('top', newY)
     .css('left', ($(this).attr('cx') - (w*.5)).toString()+'px');
 });
